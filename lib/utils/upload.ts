@@ -19,6 +19,7 @@ export async function saveUploadedFile(file: File): Promise<string> {
 
   await writeFile(filepath, buffer)
 
-  return `/uploads/${filename}`
+  // 使用 API 路由提供文件，解决 standalone 模式下静态文件无法访问的问题
+  return `/api/uploads/${filename}`
 }
 

@@ -36,6 +36,97 @@ pnpm dev
 - 前台: http://localhost:3000
 - 后台: http://localhost:3000/admin
 
+## Docker 部署
+
+### 使用 Docker Compose（推荐）
+
+1. 创建 `.env` 文件（可选，用于配置环境变量）：
+
+```bash
+DATABASE_URL=file:./data/dev.db
+NEXT_PUBLIC_SOCIAL_GITHUB=https://github.com/yourusername
+NEXT_PUBLIC_SOCIAL_EMAIL=your.email@example.com
+NEXT_PUBLIC_SOCIAL_TELEGRAM=your_telegram_username
+```
+
+2. 构建并启动容器：
+
+```bash
+docker-compose up -d
+```
+
+3. 访问应用：
+- 前台: http://localhost:3000
+- 后台: http://localhost:3000/admin
+
+### 使用 Docker 命令
+
+1. 构建镜像：
+
+```bash
+docker build \
+  --build-arg DATABASE_URL=file:./dev.db \
+  --build-arg NEXT_PUBLIC_SOCIAL_GITHUB=https://github.com/yourusername \
+  --build-arg NEXT_PUBLIC_SOCIAL_EMAIL=your.email@example.com \
+  --build-arg NEXT_PUBLIC_SOCIAL_TELEGRAM=your_telegram_username \
+  -t devport:latest .
+```
+
+2. 运行容器：
+
+```bash
+docker run -d \
+  -p 3000:3000 \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/uploads:/app/public/uploads \
+  --name devport \
+  devport:latest
+```
+
+### 数据持久化
+
+- 数据库文件会保存在 `./data` 目录
+- 上传的图片会保存在 `./uploads` 目录
+
+### 更新部署
+
+**数据安全说明：**
+
+✅ **数据不会丢失**：数据库文件通过 volume 挂载在宿主机，重新构建镜像不会影响数据。
+
+**更新流程：**
+
+```bash
+# 1. 拉取最新代码
+git pull
+
+# 2. 重新构建并启动
+docker-compose up -d --build
+```
+
+**Schema 变更处理：**
+
+- 如果数据库 schema 有**非破坏性变更**（如添加字段、表），容器启动时会自动应用
+- 如果 schema 有**破坏性变更**（如删除字段、修改字段类型），需要手动处理：
+
+```bash
+# 进入容器
+docker-compose exec devport sh
+
+# 手动应用迁移（会丢失数据，谨慎操作）
+prisma db push --accept-data-loss
+```
+
+### 停止和清理
+
+```bash
+# 停止容器
+docker-compose down
+
+# 停止并删除数据卷（谨慎操作，会删除所有数据）
+docker-compose down -v
+```
+
 ## 功能特性
 
 ### 前台

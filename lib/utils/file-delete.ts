@@ -5,8 +5,13 @@ import { existsSync } from 'fs'
 const PUBLIC_DIR = join(process.cwd(), 'public')
 
 export async function deleteFile(filePath: string): Promise<void> {
-  // 确保路径是相对路径，防止路径遍历攻击
-  if (filePath.startsWith('/')) {
+  // 处理 API 路由路径格式：/api/uploads/filename -> uploads/filename
+  // 也兼容旧格式：/uploads/filename -> uploads/filename
+  if (filePath.startsWith('/api/uploads/')) {
+    filePath = filePath.replace('/api/uploads/', 'uploads/')
+  } else if (filePath.startsWith('/uploads/')) {
+    filePath = filePath.replace('/uploads/', 'uploads/')
+  } else if (filePath.startsWith('/')) {
     filePath = filePath.substring(1)
   }
   

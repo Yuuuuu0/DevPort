@@ -1,0 +1,33 @@
+services:
+  devport:
+    container_name: devport
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # 数据库配置
+        DATABASE_URL: ${DATABASE_URL:-file:/app/data/dev.db}
+        # 社交媒体链接（可选）
+        NEXT_PUBLIC_SOCIAL_GITHUB: ${NEXT_PUBLIC_SOCIAL_GITHUB:-}
+        NEXT_PUBLIC_SOCIAL_EMAIL: ${NEXT_PUBLIC_SOCIAL_EMAIL:-}
+        NEXT_PUBLIC_SOCIAL_TELEGRAM: ${NEXT_PUBLIC_SOCIAL_TELEGRAM:-}
+    ports:
+      - "3000:3000"
+    volumes:
+      # 持久化数据库
+      - ./data:/app/data
+      # 持久化上传的文件
+      - ./uploads:/app/public/uploads
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/dev.db
+      - NEXT_PUBLIC_SOCIAL_GITHUB=${NEXT_PUBLIC_SOCIAL_GITHUB:-}
+      - NEXT_PUBLIC_SOCIAL_EMAIL=${NEXT_PUBLIC_SOCIAL_EMAIL:-}
+      - NEXT_PUBLIC_SOCIAL_TELEGRAM=${NEXT_PUBLIC_SOCIAL_TELEGRAM:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
