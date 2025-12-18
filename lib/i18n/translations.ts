@@ -10,6 +10,9 @@ export const translations = {
       viewDemo: '查看演示',
       noProjects: '暂无作品展示',
       projects: '作品展示',
+      contact: '联系方式',
+      backToProjects: '返回项目列表',
+      viewDetails: '查看详情',
     },
     admin: {
       // 后台不需要多语言，但保留结构以便扩展
@@ -24,6 +27,9 @@ export const translations = {
       viewDemo: 'View Demo',
       noProjects: 'No projects available',
       projects: 'Portfolio',
+      contact: 'Contact',
+      backToProjects: 'Back to Projects',
+      viewDetails: 'View Details',
     },
     admin: {
       // 后台不需要多语言，但保留结构以便扩展
@@ -31,5 +37,5 @@ export const translations = {
   },
 } as const
 
-export const defaultLocale: Locale = 'zh'
+export const defaultLocale: Locale = 'en'
 

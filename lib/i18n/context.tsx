@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { Locale, defaultLocale, translations } from './translations'
-import { usePathname, useRouter } from 'next/navigation'
 
 type Translations = typeof translations.zh | typeof translations.en
 
@@ -10,34 +9,34 @@ interface I18nContextType {
   locale: Locale
   setLocale: (locale: Locale) => void
   t: Translations
+  isHydrated: boolean // 标记是否已完成水合
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined)
 
 export function I18nProvider({ children }: { children: ReactNode }) {
+  // 初始状态统一使用 defaultLocale，确保服务端和客户端一致
   const [locale, setLocaleState] = useState<Locale>(defaultLocale)
-  const router = useRouter()
-  const pathname = usePathname()
+  const [isHydrated, setIsHydrated] = useState(false)
 
+  // 客户端挂载后，从 localStorage 读取保存的语言设置
   useEffect(() => {
-    // 从 localStorage 读取语言设置
     const savedLocale = localStorage.getItem('locale') as Locale | null
     if (savedLocale && (savedLocale === 'zh' || savedLocale === 'en')) {
       setLocaleState(savedLocale)
     }
+    setIsHydrated(true)
   }, [])
 
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale)
     localStorage.setItem('locale', newLocale)
-    // 刷新页面以应用新语言
-    router.refresh()
   }
 
   const t = translations[locale]
 
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t }}>
+    <I18nContext.Provider value={{ locale, setLocale, t, isHydrated }}>
       {children}
     </I18nContext.Provider>
   )

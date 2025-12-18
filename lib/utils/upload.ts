@@ -22,8 +22,3 @@ export async function saveUploadedFile(file: File): Promise<string> {
   return `/uploads/${filename}`
 }
 
-export async function saveMultipleFiles(files: File[]): Promise<string[]> {
-  const paths = await Promise.all(files.map(file => saveUploadedFile(file)))
-  return paths
-}
-

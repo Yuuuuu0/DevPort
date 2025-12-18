@@ -20,7 +20,6 @@ export function MarkdownEditor({ value, onChange }: MarkdownEditorProps) {
         onChange={onChange}
         preview="edit"
         hideToolbar={false}
-        visibleDragBar={false}
         height={400}
       />
     </div>

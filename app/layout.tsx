@@ -4,12 +4,14 @@ import "./globals.css"
 import { Toaster } from "@/components/ui/toaster"
 import { I18nProvider } from "@/lib/i18n/context"
 import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
+import { DynamicTitle } from "@/components/dynamic-title"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "DevPort - 作品展示",
-  description: "接单程序员作品展示网站",
+  title: "DevPort - Portfolio",
+  description: "My Developer Portfolio",
 }
 
 export default function RootLayout({
@@ -21,8 +23,14 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body className={inter.className}>
         <I18nProvider>
-          <Header />
-          {children}
+          <DynamicTitle />
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
           <Toaster />
         </I18nProvider>
       </body>
