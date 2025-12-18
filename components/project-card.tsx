@@ -14,7 +14,12 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
+  
+  // 根据当前语言获取项目名称，如果没有则回退
+  const projectName = locale === 'en' 
+    ? (project.nameEn || project.nameZh || '')
+    : (project.nameZh || project.nameEn || '')
   
   return (
     <motion.div
@@ -28,7 +33,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
           <div className="relative aspect-video w-full overflow-hidden">
             <Image
               src={project.coverImage}
-              alt={project.name}
+              alt={projectName}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-110"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -41,9 +46,12 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
               </div>
             </div>
           </div>
-          <CardContent className="p-6">
-            <h3 className="font-bold text-xl group-hover:text-primary transition-colors">
-              {project.name}
+          <CardContent className="p-6 h-24 flex items-start">
+            <h3 
+              className="font-bold text-xl group-hover:text-primary transition-colors line-clamp-2"
+              title={projectName}
+            >
+              {projectName}
             </h3>
           </CardContent>
         </Card>

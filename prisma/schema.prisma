@@ -12,13 +12,15 @@ datasource db {
 
 model Project {
   id          String   @id @default(cuid())
-  name        String
+  nameZh      String?  // Project name in Chinese
+  nameEn      String?  // Project name in English
   contentZh   String?  // Markdown content in Chinese
   contentEn   String?  // Markdown content in English
   images      String   // JSON array stored as string
   coverImage  String
   demoUrl     String?
   hidden      Boolean  @default(false)
+  order       Int      @default(0) // Display order, lower number appears first
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

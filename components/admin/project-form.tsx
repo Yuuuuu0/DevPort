@@ -22,7 +22,6 @@ interface ProjectFormProps {
 }
 
 interface FormData {
-  name: string
   demoUrl: string
   hidden: boolean
 }
@@ -31,13 +30,14 @@ export function ProjectForm({ project, open, onOpenChange, onSuccess }: ProjectF
   const { toast } = useToast()
   const { register, handleSubmit, reset, setValue, watch } = useForm<FormData>({
     defaultValues: {
-      name: project?.name || '',
       demoUrl: project?.demoUrl || '',
       hidden: project?.hidden || false,
     },
   })
 
-  const [contentLang, setContentLang] = useState<'zh' | 'en'>('zh')
+  const [lang, setLang] = useState<'zh' | 'en'>('zh')
+  const [nameZh, setNameZh] = useState<string>('')
+  const [nameEn, setNameEn] = useState<string>('')
   const [contentZh, setContentZh] = useState<string>('')
   const [contentEn, setContentEn] = useState<string>('')
   const [images, setImages] = useState<string[]>(project?.images || [])
@@ -50,20 +50,22 @@ export function ProjectForm({ project, open, onOpenChange, onSuccess }: ProjectF
   useEffect(() => {
     if (project) {
       reset({
-        name: project.name,
         demoUrl: project.demoUrl || '',
         hidden: project.hidden,
       })
+      setNameZh(project.nameZh || '')
+      setNameEn(project.nameEn || '')
       setContentZh(project.contentZh || '')
       setContentEn(project.contentEn || '')
       setImages(project.images)
       setCoverImage(project.coverImage)
     } else {
       reset({
-        name: '',
         demoUrl: '',
         hidden: false,
       })
+      setNameZh('')
+      setNameEn('')
       setContentZh('')
       setContentEn('')
       setImages([])
@@ -119,7 +121,7 @@ export function ProjectForm({ project, open, onOpenChange, onSuccess }: ProjectF
       console.error('Error deleting file:', error)
     }
 
-    const newImages = images.filter(img => img !== path)
+    const newImages = images.filter((img: string) => img !== path)
     setImages(newImages)
     
     // 如果删除的是封面图，重新选择封面
@@ -177,9 +179,19 @@ export function ProjectForm({ project, open, onOpenChange, onSuccess }: ProjectF
       return
     }
 
+    if (!nameZh.trim() && !nameEn.trim()) {
+      toast({
+        title: '验证失败',
+        description: '请至少填写一个语言的项目名称',
+        variant: 'destructive',
+      })
+      return
+    }
+
     try {
       const payload = {
-        name: data.name,
+        nameZh: nameZh.trim() || null,
+        nameEn: nameEn.trim() || null,
         contentZh: contentZh.trim() || null,
         contentEn: contentEn.trim() || null,
         images,
@@ -210,6 +222,8 @@ export function ProjectForm({ project, open, onOpenChange, onSuccess }: ProjectF
       onSuccess()
       onOpenChange(false)
       reset()
+      setNameZh('')
+      setNameEn('')
       setContentZh('')
       setContentEn('')
       setImages([])
@@ -227,10 +241,11 @@ export function ProjectForm({ project, open, onOpenChange, onSuccess }: ProjectF
     if (!newOpen) {
       // 关闭时重置表单
       reset({
-        name: '',
         demoUrl: '',
         hidden: false,
       })
+      setNameZh('')
+      setNameEn('')
       setContentZh('')
       setContentEn('')
       setImages([])
@@ -241,17 +256,77 @@ export function ProjectForm({ project, open, onOpenChange, onSuccess }: ProjectF
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{project ? '编辑项目' : '创建项目'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* 中英文切换 Tab */}
+          <div className="border-b">
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setLang('zh')}
+                className={`px-4 py-2 font-medium transition-colors ${
+                  lang === 'zh'
+                    ? 'border-b-2 border-primary text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                简体中文
+              </button>
+              <button
+                type="button"
+                onClick={() => setLang('en')}
+                className={`px-4 py-2 font-medium transition-colors ${
+                  lang === 'en'
+                    ? 'border-b-2 border-primary text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                English
+              </button>
+            </div>
+          </div>
+
+          {/* 项目标题 */}
           <div>
-            <Label htmlFor="name">项目名称 *</Label>
+            <Label htmlFor="name">{lang === 'zh' ? '项目名称 *' : 'Project Name *'}</Label>
             <Input
               id="name"
-              {...register('name', { required: '项目名称不能为空' })}
+              value={lang === 'zh' ? nameZh : nameEn}
+              onChange={(e) => {
+                if (lang === 'zh') {
+                  setNameZh(e.target.value)
+                } else {
+                  setNameEn(e.target.value)
+                }
+              }}
+              placeholder={lang === 'zh' ? '请输入项目名称' : 'Enter project name'}
             />
+          </div>
+
+          {/* 项目内容 */}
+          <div>
+            <Label>{lang === 'zh' ? '项目内容（Markdown）' : 'Project Content (Markdown)'}</Label>
+            <div className="mt-2">
+              {lang === 'zh' ? (
+                <MarkdownEditor
+                  value={contentZh}
+                  onChange={(value) => setContentZh(value || '')}
+                />
+              ) : (
+                <MarkdownEditor
+                  value={contentEn}
+                  onChange={(value) => setContentEn(value || '')}
+                />
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              {lang === 'zh' 
+                ? '提示：可以分别编辑中文和英文内容，前台会根据用户选择的语言自动显示对应内容'
+                : 'Tip: You can edit Chinese and English content separately. The frontend will automatically display the corresponding content based on the user\'s selected language'}
+            </p>
           </div>
 
           <div>
@@ -338,52 +413,6 @@ export function ProjectForm({ project, open, onOpenChange, onSuccess }: ProjectF
                 ))}
               </div>
             )}
-          </div>
-
-          <div>
-            <Label>项目内容（Markdown）</Label>
-            <div className="mt-2 mb-4">
-              <div className="flex gap-2 border-b">
-                <button
-                  type="button"
-                  onClick={() => setContentLang('zh')}
-                  className={`px-4 py-2 font-medium transition-colors ${
-                    contentLang === 'zh'
-                      ? 'border-b-2 border-primary text-primary'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  简体中文
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setContentLang('en')}
-                  className={`px-4 py-2 font-medium transition-colors ${
-                    contentLang === 'en'
-                      ? 'border-b-2 border-primary text-primary'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  English
-                </button>
-              </div>
-            </div>
-            <div className="mt-2">
-              {contentLang === 'zh' ? (
-                <MarkdownEditor
-                  value={contentZh}
-                  onChange={(value) => setContentZh(value || '')}
-                />
-              ) : (
-                <MarkdownEditor
-                  value={contentEn}
-                  onChange={(value) => setContentEn(value || '')}
-                />
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground mt-2">
-              提示：可以分别编辑中文和英文内容，前台会根据用户选择的语言自动显示对应内容
-            </p>
           </div>
 
           <div className="flex items-center space-x-2">

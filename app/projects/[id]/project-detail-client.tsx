@@ -14,6 +14,10 @@ interface ProjectDetailClientProps {
 
 export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const { t, locale } = useI18n()
+  // 根据当前语言选择对应的标题，如果当前语言没有则回退
+  const projectName = locale === 'en' 
+    ? (project.nameEn || project.nameZh || '')
+    : (project.nameZh || project.nameEn || '')
   // 根据当前语言选择对应的内容，如果当前语言没有则回退到中文
   const content = locale === 'en' 
     ? (project.contentEn || project.contentZh || '')
@@ -47,7 +51,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-5xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent"
           >
-            {project.name}
+            {projectName}
           </motion.h1>
           
           {/* 演示链接 */}
