@@ -1,0 +1,32 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { projectService } from '@/lib/services/project-service'
+
+export async function GET(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams
+    const includeHidden = searchParams.get('includeHidden') === 'true'
+    const projects = await projectService.getAllProjects(includeHidden)
+    return NextResponse.json(projects)
+  } catch (error) {
+    console.error('Get projects error:', error)
+    return NextResponse.json(
+      { error: '获取项目列表失败' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const project = await projectService.createProject(body)
+    return NextResponse.json(project, { status: 201 })
+  } catch (error: any) {
+    console.error('Create project error:', error)
+    return NextResponse.json(
+      { error: error.message || '创建项目失败' },
+      { status: 400 }
+    )
+  }
+}
+
