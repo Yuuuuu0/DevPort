@@ -19,13 +19,14 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # 接收构建参数（环境变量）
-ARG DATABASE_URL
+# 注意：DATABASE_URL 不在构建参数中，容器运行时固定为 file:/app/data/prod.db
 ARG NEXT_PUBLIC_SOCIAL_GITHUB
 ARG NEXT_PUBLIC_SOCIAL_EMAIL
 ARG NEXT_PUBLIC_SOCIAL_TELEGRAM
 
 # 设置环境变量（构建时使用临时路径，避免创建数据库文件）
-ENV DATABASE_URL=${DATABASE_URL:-file:/tmp/build.db}
+# 运行时环境变量会覆盖此值，固定为 file:/app/data/prod.db
+ENV DATABASE_URL=file:/tmp/build.db
 ENV NEXT_PUBLIC_SOCIAL_GITHUB=${NEXT_PUBLIC_SOCIAL_GITHUB}
 ENV NEXT_PUBLIC_SOCIAL_EMAIL=${NEXT_PUBLIC_SOCIAL_EMAIL}
 ENV NEXT_PUBLIC_SOCIAL_TELEGRAM=${NEXT_PUBLIC_SOCIAL_TELEGRAM}
@@ -38,6 +39,9 @@ RUN pnpm db:push --accept-data-loss || true
 
 # 构建应用
 RUN pnpm build
+
+# 确保 public 目录被复制到 standalone 输出中（standalone 模式可能不会自动包含）
+RUN if [ -d "public" ]; then cp -r public .next/standalone/ || true; fi
 
 # 生产阶段
 FROM node:20-alpine AS runner
@@ -61,16 +65,11 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
 
-# 显式复制 public 目录（standalone 模式应该已经包含，但确保存在）
-# 如果 standalone 中已有 public，这个复制会合并内容
-COPY --from=builder /app/public ./public
-
 # 复制入口脚本并设置权限
 COPY docker-entrypoint.sh ./
 RUN chmod +x docker-entrypoint.sh
 
 # 创建数据目录和上传目录
-# volume 映射会覆盖 public/uploads，所以这里只是确保结构存在
 RUN mkdir -p data public/uploads && chown -R nextjs:nodejs /app
 
 USER nextjs

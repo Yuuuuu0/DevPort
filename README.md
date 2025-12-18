@@ -40,24 +40,46 @@ pnpm dev
 
 ### 使用 Docker Compose（推荐）
 
-1. 创建 `.env` 文件（可选，用于配置环境变量）：
+1. 创建必要的目录并设置权限（首次部署必需）：
 
 ```bash
-DATABASE_URL=file:./data/dev.db
+# 创建数据目录和上传目录
+mkdir -p data uploads
+
+# 设置目录权限（允许容器用户写入）
+chmod 755 data uploads
+```
+
+2. 创建 `.env` 文件（可选，用于配置环境变量）：
+
+```bash
+# 注意：容器部署时会忽略 DATABASE_URL，固定使用 file:/app/data/prod.db
+# DATABASE_URL 仅用于本地开发环境
 NEXT_PUBLIC_SOCIAL_GITHUB=https://github.com/yourusername
 NEXT_PUBLIC_SOCIAL_EMAIL=your.email@example.com
 NEXT_PUBLIC_SOCIAL_TELEGRAM=your_telegram_username
 ```
 
-2. 构建并启动容器：
+3. 构建并启动容器：
 
 ```bash
 docker-compose up -d
 ```
 
-3. 访问应用：
+4. 访问应用：
 - 前台: http://localhost:3000
 - 后台: http://localhost:3000/admin
+
+**注意**：如果容器启动失败并提示权限错误，请确保 `data` 和 `uploads` 目录对容器用户可写。容器使用 UID 1001 运行，您可以使用以下命令设置正确的权限：
+
+```bash
+# 方法 1: 使用宽松权限（开发环境）
+chmod 777 data uploads
+
+# 方法 2: 设置正确的所有者（推荐）
+sudo chown -R 1001:1001 data uploads
+chmod 755 data uploads
+```
 
 ### 使用 Docker 命令
 
@@ -65,7 +87,6 @@ docker-compose up -d
 
 ```bash
 docker build \
-  --build-arg DATABASE_URL=file:./dev.db \
   --build-arg NEXT_PUBLIC_SOCIAL_GITHUB=https://github.com/yourusername \
   --build-arg NEXT_PUBLIC_SOCIAL_EMAIL=your.email@example.com \
   --build-arg NEXT_PUBLIC_SOCIAL_TELEGRAM=your_telegram_username \
@@ -79,14 +100,21 @@ docker run -d \
   -p 3000:3000 \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/uploads:/app/public/uploads \
+  -e DATABASE_URL=file:/app/data/prod.db \
   --name devport \
   devport:latest
 ```
 
+**注意**：容器运行时数据库路径固定为 `file:/app/data/prod.db`，即使不指定 `-e DATABASE_URL` 也会使用此路径。
+
 ### 数据持久化
 
-- 数据库文件会保存在 `./data` 目录
+- 数据库文件会保存在 `./data/prod.db`
 - 上传的图片会保存在 `./uploads` 目录
+
+**重要说明**：
+- 容器部署时，数据库路径固定为 `/app/data/prod.db`（对应宿主机 `./data/prod.db`）
+- `.env` 文件中的 `DATABASE_URL` 配置在容器部署时会被忽略，仅用于本地开发
 
 ### 更新部署
 

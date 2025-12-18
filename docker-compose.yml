@@ -5,8 +5,6 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        # 数据库配置
-        DATABASE_URL: ${DATABASE_URL:-file:/app/data/dev.db}
         # 社交媒体链接（可选）
         NEXT_PUBLIC_SOCIAL_GITHUB: ${NEXT_PUBLIC_SOCIAL_GITHUB:-}
         NEXT_PUBLIC_SOCIAL_EMAIL: ${NEXT_PUBLIC_SOCIAL_EMAIL:-}
@@ -20,7 +18,8 @@ services:
       - ./uploads:/app/public/uploads
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=file:/app/data/dev.db
+      # 容器部署时固定使用生产数据库路径，忽略 .env 文件中的 DATABASE_URL
+      - DATABASE_URL=file:/app/data/prod.db
       - NEXT_PUBLIC_SOCIAL_GITHUB=${NEXT_PUBLIC_SOCIAL_GITHUB:-}
       - NEXT_PUBLIC_SOCIAL_EMAIL=${NEXT_PUBLIC_SOCIAL_EMAIL:-}
       - NEXT_PUBLIC_SOCIAL_TELEGRAM=${NEXT_PUBLIC_SOCIAL_TELEGRAM:-}
