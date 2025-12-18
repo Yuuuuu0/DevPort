@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { saveUploadedFile } from '@/lib/utils/upload'
 import { deleteFile } from '@/lib/utils/file-delete'
+import { requireAuth } from '@/lib/utils/auth'
 
 export async function POST(request: NextRequest) {
   try {
+    // 上传文件需要鉴权
+    const authError = await requireAuth(request)
+    if (authError) return authError
+    
     const formData = await request.formData()
     const file = formData.get('file') as File
 
@@ -24,6 +29,10 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    // 删除文件需要鉴权
+    const authError = await requireAuth(request)
+    if (authError) return authError
+    
     const body = await request.json()
     const { path } = body
 

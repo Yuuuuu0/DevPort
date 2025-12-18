@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { siteConfig } from '@/lib/config'
+import type { SocialLink } from '@/lib/config'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils/cn'
 
@@ -58,10 +58,10 @@ function getSocialIcon(type: 'github' | 'email' | 'telegram') {
 
 interface SocialLinksProps {
   className?: string
+  socialLinks: SocialLink[]
 }
 
-export function SocialLinks({ className }: SocialLinksProps) {
-  const { socialLinks } = siteConfig
+export function SocialLinks({ className, socialLinks }: SocialLinksProps) {
 
   // 过滤掉空值，确保只显示有效的联系方式
   const validLinks = socialLinks.filter(

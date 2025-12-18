@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { projectService } from '@/lib/services/project-service'
+import { requireAuth } from '@/lib/utils/auth'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -33,6 +34,10 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
+    // 更新项目需要鉴权
+    const authError = await requireAuth(request)
+    if (authError) return authError
+    
     const { id } = await params
     const body = await request.json()
     const project = await projectService.updateProject(id, body)
@@ -51,6 +56,10 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
+    // 删除项目需要鉴权
+    const authError = await requireAuth(request)
+    if (authError) return authError
+    
     const { id } = await params
     await projectService.deleteProject(id)
     return NextResponse.json({ success: true })

@@ -1,43 +1,41 @@
 /**
  * 网站配置文件
- * 联系方式从环境变量读取
+ * 联系方式从 config/.env 文件读取
  */
+
+import { readSocialConfig } from './utils/read-config'
 
 export interface SocialLink {
   type: 'github' | 'email' | 'telegram'
   label: string
   url: string
-  icon?: string // 可选的自定义图标
-}
-
-export interface SiteConfig {
-  socialLinks: SocialLink[]
+  icon?: string
 }
 
 /**
- * 从环境变量构建联系方式配置
- * 如果某个环境变量未设置，则对应的联系方式不会显示
+ * 从配置文件构建联系方式配置
+ * 如果某个配置项未设置，则对应的联系方式不会显示
+ * 这个函数在服务器端调用，会在运行时读取配置文件
  */
-function buildSocialLinks(): SocialLink[] {
+export function buildSocialLinks(): SocialLink[] {
   const links: SocialLink[] = []
+  const config = readSocialConfig()
 
   // GitHub
-  const githubUrl = process.env.NEXT_PUBLIC_SOCIAL_GITHUB
-  if (githubUrl && githubUrl.trim()) {
+  if (config.github && config.github.trim()) {
     links.push({
       type: 'github',
       label: 'GitHub',
-      url: githubUrl.trim(),
+      url: config.github.trim(),
     })
   }
 
   // Email
-  const emailUrl = process.env.NEXT_PUBLIC_SOCIAL_EMAIL
-  if (emailUrl && emailUrl.trim()) {
+  if (config.email && config.email.trim()) {
     // 如果 email 不是 mailto: 开头，自动添加
-    const email = emailUrl.trim().startsWith('mailto:')
-      ? emailUrl.trim()
-      : `mailto:${emailUrl.trim()}`
+    const email = config.email.trim().startsWith('mailto:')
+      ? config.email.trim()
+      : `mailto:${config.email.trim()}`
     links.push({
       type: 'email',
       label: 'Email',
@@ -46,10 +44,9 @@ function buildSocialLinks(): SocialLink[] {
   }
 
   // Telegram
-  const telegramUrl = process.env.NEXT_PUBLIC_SOCIAL_TELEGRAM
-  if (telegramUrl && telegramUrl.trim()) {
+  if (config.telegram && config.telegram.trim()) {
     // 如果 telegram 不是完整 URL，自动添加 https://t.me/
-    let telegram = telegramUrl.trim()
+    let telegram = config.telegram.trim()
     if (!telegram.startsWith('http')) {
       // 移除 @ 符号（如果有）
       const username = telegram.replace(/^@/, '')
@@ -63,8 +60,4 @@ function buildSocialLinks(): SocialLink[] {
   }
 
   return links
-}
-
-export const siteConfig: SiteConfig = {
-  socialLinks: buildSocialLinks(),
 }

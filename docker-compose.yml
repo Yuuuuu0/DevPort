@@ -1,14 +1,7 @@
 services:
   devport:
     container_name: devport
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        # 社交媒体链接（可选）
-        NEXT_PUBLIC_SOCIAL_GITHUB: ${NEXT_PUBLIC_SOCIAL_GITHUB:-}
-        NEXT_PUBLIC_SOCIAL_EMAIL: ${NEXT_PUBLIC_SOCIAL_EMAIL:-}
-        NEXT_PUBLIC_SOCIAL_TELEGRAM: ${NEXT_PUBLIC_SOCIAL_TELEGRAM:-}
+    image: yuuuuu0/devport:latest
     ports:
       - "3000:3000"
     volumes:
@@ -16,13 +9,12 @@ services:
       - ./data:/app/data
       # 持久化上传的文件
       - ./uploads:/app/public/uploads
+      # 配置文件目录（联系方式配置）
+      - ./config:/app/config
     environment:
       - NODE_ENV=production
-      # 容器部署时固定使用生产数据库路径，忽略 .env 文件中的 DATABASE_URL
+      # 容器部署时固定使用生产数据库路径
       - DATABASE_URL=file:/app/data/prod.db
-      - NEXT_PUBLIC_SOCIAL_GITHUB=${NEXT_PUBLIC_SOCIAL_GITHUB:-}
-      - NEXT_PUBLIC_SOCIAL_EMAIL=${NEXT_PUBLIC_SOCIAL_EMAIL:-}
-      - NEXT_PUBLIC_SOCIAL_TELEGRAM=${NEXT_PUBLIC_SOCIAL_TELEGRAM:-}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]

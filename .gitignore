@@ -42,5 +42,8 @@ next-env.d.ts
 # uploads
 /public/uploads
 
+# 配置文件
+config/.env
+
 # pnpm
 /.pnpm-store/

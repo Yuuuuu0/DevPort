@@ -1,10 +1,15 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { LanguageSwitcher } from './language-switcher'
 import { motion } from 'framer-motion'
 
 export function Header() {
+  const pathname = usePathname()
+  // 后台页面不显示语言切换器
+  const isAdminPage = pathname?.startsWith('/admin') ?? false
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -17,13 +22,15 @@ export function Header() {
             DevPort
           </Link>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <LanguageSwitcher />
-        </motion.div>
+        {!isAdminPage && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <LanguageSwitcher />
+          </motion.div>
+        )}
       </div>
     </header>
   )

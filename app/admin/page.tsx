@@ -83,8 +83,33 @@ export default function AdminPage() {
     }
   }
 
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      })
+
+      if (response.ok) {
+        window.location.href = '/admin/login'
+      }
+    } catch (error: any) {
+      toast({
+        title: '登出失败',
+        description: error.message,
+        variant: 'destructive',
+      })
+    }
+  }
+
   return (
     <main className="container mx-auto px-4 py-8">
+      {/* 右上角登出按钮 */}
+      <div className="fixed top-4 right-4 z-50">
+        <Button variant="outline" onClick={handleLogout}>
+          登出
+        </Button>
+      </div>
+      
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-4xl font-bold">项目管理</h1>
         <Button onClick={handleCreate}>

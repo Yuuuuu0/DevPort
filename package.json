@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "db:push": "DATABASE_URL=${DATABASE_URL:-file:./dev.db} prisma db push",
@@ -30,6 +30,7 @@
     "remark-gfm": "^4.0.0",
     "@uiw/react-md-editor": "^3.25.0",
     "framer-motion": "^11.5.4",
+    "jose": "^5.9.6",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },

@@ -32,4 +32,3 @@ export async function deleteMultipleFiles(filePaths: string[]): Promise<void> {
     console.error(`Failed to delete file ${path}:`, err)
   })))
 }
-

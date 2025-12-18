@@ -4,13 +4,15 @@ import { useI18n } from '@/lib/i18n/context'
 import { ProjectCard } from '@/components/project-card'
 import { SocialLinks } from '@/components/social-links'
 import type { ProjectData } from '@/lib/types'
+import type { SocialLink } from '@/lib/config'
 import { motion } from 'framer-motion'
 
 interface HomePageClientProps {
   projects: ProjectData[]
+  socialLinks: SocialLink[]
 }
 
-export function HomePageClient({ projects }: HomePageClientProps) {
+export function HomePageClient({ projects, socialLinks }: HomePageClientProps) {
   const { t } = useI18n()
 
   return (
@@ -38,7 +40,7 @@ export function HomePageClient({ projects }: HomePageClientProps) {
               : t.common.noProjects
             }
           </p>
-          <SocialLinks />
+          <SocialLinks socialLinks={socialLinks} />
         </motion.div>
 
         {projects.length === 0 ? (
