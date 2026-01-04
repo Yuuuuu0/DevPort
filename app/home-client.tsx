@@ -34,12 +34,20 @@ export function HomePageClient({ projects, socialLinks }: HomePageClientProps) {
           <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             {t.common.projects}
           </h1>
-          <p className="text-muted-foreground text-lg mb-8">
+          <p className="text-muted-foreground text-lg mb-6">
             {projects.length > 0 
               ? `${projects.length} ${t.common.projects.toLowerCase()}`
               : t.common.noProjects
             }
           </p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-foreground/80 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed"
+          >
+            {t.common.businessDescription}
+          </motion.p>
           <SocialLinks socialLinks={socialLinks} />
         </motion.div>
 

@@ -13,6 +13,7 @@ export const translations = {
       contact: '联系方式',
       backToProjects: '返回项目列表',
       viewDetails: '查看详情',
+      businessDescription: '欢迎咨询项目合作，提供专业的开发服务与技术解决方案',
     },
     admin: {
       // 后台不需要多语言，但保留结构以便扩展
@@ -30,6 +31,7 @@ export const translations = {
       contact: 'Contact',
       backToProjects: 'Back to Projects',
       viewDetails: 'View Details',
+      businessDescription: 'Open for project collaboration. Providing professional development services and technical solutions.',
     },
     admin: {
       // 后台不需要多语言，但保留结构以便扩展
