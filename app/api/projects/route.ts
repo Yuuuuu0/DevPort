@@ -33,12 +33,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const project = await projectService.createProject(body)
     return NextResponse.json(project, { status: 201 })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Create project error:', error)
+    const message = error instanceof Error ? error.message : undefined
     return NextResponse.json(
-      { error: error.message || '创建项目失败' },
+      { error: message || '创建项目失败' },
       { status: 400 }
     )
   }
 }
-

@@ -39,6 +39,10 @@ next-env.d.ts
 /prisma/*.db
 /prisma/*.db-journal
 
+# local volumes (docker / local deploy)
+/data
+/uploads
+
 # uploads
 /public/uploads
 

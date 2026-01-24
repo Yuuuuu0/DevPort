@@ -42,10 +42,11 @@ export async function PUT(
     const body = await request.json()
     const project = await projectService.updateProject(id, body)
     return NextResponse.json(project)
-  } catch (error: any) {
+  } catch (error) {
     console.error('Update project error:', error)
+    const message = error instanceof Error ? error.message : undefined
     return NextResponse.json(
-      { error: error.message || '更新项目失败' },
+      { error: message || '更新项目失败' },
       { status: 400 }
     )
   }
@@ -71,4 +72,3 @@ export async function DELETE(
     )
   }
 }
-

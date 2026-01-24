@@ -54,10 +54,11 @@ export async function GET(request: NextRequest) {
     const unusedImages = uploadedFiles.filter(file => !usedImages.has(file))
 
     return NextResponse.json({ unusedImages })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Get unused images error:', error)
+    const message = error instanceof Error ? error.message : undefined
     return NextResponse.json(
-      { error: error.message || '获取未使用图片失败' },
+      { error: message || '获取未使用图片失败' },
       { status: 500 }
     )
   }

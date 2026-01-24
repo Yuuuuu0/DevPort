@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { ProjectForm } from '@/components/admin/project-form'
+import { ProjectForm } from '@/components/features/admin/project-form'
 import { useToast } from '@/hooks/use-toast'
 import type { ProjectData } from '@/lib/types'
 import { Plus, Pencil, Trash2, GripVertical, Trash } from 'lucide-react'

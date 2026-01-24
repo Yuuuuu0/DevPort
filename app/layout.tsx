@@ -1,13 +1,23 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Chakra_Petch, Manrope } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "@/components/ui/toaster"
 import { I18nProvider } from "@/lib/i18n/context"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
+import { Header } from "@/components/layout/header"
+import { Footer } from "@/components/layout/footer"
 import { DynamicTitle } from "@/components/dynamic-title"
+import { cn } from "@/lib/utils/cn"
 
-const inter = Inter({ subsets: ["latin"] })
+const chakra = Chakra_Petch({ 
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-heading",
+})
+
+const manrope = Manrope({ 
+  subsets: ["latin"], 
+  variable: "--font-sans",
+})
 
 export const metadata: Metadata = {
   title: "DevPort - Portfolio",
@@ -26,7 +36,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body className={inter.className}>
+      <body className={cn(
+        "min-h-screen bg-background font-sans antialiased",
+        manrope.variable,
+        chakra.variable
+      )}>
         <I18nProvider>
           <DynamicTitle />
           <div className="flex flex-col min-h-screen">
@@ -42,4 +56,3 @@ export default function RootLayout({
     </html>
   )
 }
-

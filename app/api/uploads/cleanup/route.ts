@@ -24,10 +24,11 @@ export async function POST(request: NextRequest) {
       success: true,
       deleted: paths.length 
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Cleanup images error:', error)
+    const message = error instanceof Error ? error.message : undefined
     return NextResponse.json(
-      { error: error.message || '清理图片失败' },
+      { error: message || '清理图片失败' },
       { status: 500 }
     )
   }

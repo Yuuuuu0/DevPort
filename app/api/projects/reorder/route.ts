@@ -21,10 +21,11 @@ export async function POST(request: NextRequest) {
     await projectRepository.updateOrders(orders)
     
     return NextResponse.json({ success: true })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Reorder projects error:', error)
+    const message = error instanceof Error ? error.message : undefined
     return NextResponse.json(
-      { error: error.message || '更新排序失败' },
+      { error: message || '更新排序失败' },
       { status: 400 }
     )
   }

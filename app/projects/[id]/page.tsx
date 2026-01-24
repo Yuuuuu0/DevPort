@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { projectService } from '@/lib/services/project-service'
-import { ProjectDetailClient } from './project-detail-client'
+import { ProjectDetailClient } from './_components/project-detail-client'
 
 // 禁用缓存，确保数据实时更新
 export const revalidate = 0
@@ -20,4 +20,3 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
   return <ProjectDetailClient project={project} />
 }
-

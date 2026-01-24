@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import type { ProjectData, CreateProjectInput, UpdateProjectInput } from '@/lib/types'
+import type { Prisma, Project } from '@prisma/client'
 
 export class ProjectRepository {
   async findAll(includeHidden = false): Promise<ProjectData[]> {
@@ -7,7 +8,7 @@ export class ProjectRepository {
       where: includeHidden ? undefined : { hidden: false },
       orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
     })
-    return projects.map(this.mapToProjectData)
+    return projects.map((project) => this.mapToProjectData(project))
   }
 
   async findById(id: string): Promise<ProjectData | null> {
@@ -45,7 +46,7 @@ export class ProjectRepository {
   }
 
   async update(id: string, input: UpdateProjectInput): Promise<ProjectData> {
-    const updateData: any = {}
+    const updateData: Prisma.ProjectUpdateInput = {}
     if (input.nameZh !== undefined) updateData.nameZh = input.nameZh
     if (input.nameEn !== undefined) updateData.nameEn = input.nameEn
     if (input.contentZh !== undefined) updateData.contentZh = input.contentZh
@@ -80,14 +81,14 @@ export class ProjectRepository {
     })
   }
 
-  private mapToProjectData(project: any): ProjectData {
+  private mapToProjectData(project: Project): ProjectData {
     return {
       id: project.id,
       nameZh: project.nameZh,
       nameEn: project.nameEn,
       contentZh: project.contentZh,
       contentEn: project.contentEn,
-      images: JSON.parse(project.images),
+      images: this.parseImages(project.images),
       coverImage: project.coverImage,
       demoUrl: project.demoUrl,
       hidden: project.hidden,
@@ -96,7 +97,15 @@ export class ProjectRepository {
       updatedAt: project.updatedAt,
     }
   }
+
+  private parseImages(imagesJson: string): string[] {
+    try {
+      const parsed: unknown = JSON.parse(imagesJson)
+      return Array.isArray(parsed) && parsed.every((v) => typeof v === 'string') ? parsed : []
+    } catch {
+      return []
+    }
+  }
 }
 
 export const projectRepository = new ProjectRepository()
-

@@ -1,5 +1,5 @@
 import { projectService } from '@/lib/services/project-service'
-import { HomePageClient } from './home-client'
+import { HomePageClient } from './_components/home-client'
 import { buildSocialLinks } from '@/lib/config'
 
 // 禁用缓存，确保数据实时更新
@@ -12,4 +12,3 @@ export default async function HomePage() {
 
   return <HomePageClient projects={projects} socialLinks={socialLinks} />
 }
-
