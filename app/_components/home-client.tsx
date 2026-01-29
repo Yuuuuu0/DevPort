@@ -3,6 +3,7 @@
 import { useI18n } from '@/lib/i18n/context'
 import { ProjectCard } from '@/components/project-card'
 import { SocialLinks } from '@/components/social-links'
+import { TerminalHero } from '@/components/terminal-hero'
 import type { ProjectData } from '@/lib/types'
 import type { SocialLink } from '@/lib/config'
 import { motion } from 'framer-motion'
@@ -31,12 +32,7 @@ export function HomePageClient({ projects, socialLinks }: HomePageClientProps) {
             <span className="text-sm font-mono text-accent tracking-widest uppercase">Portfolio // {currentYear}</span>
           </div>
           
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 tracking-tight text-foreground uppercase">
-            {t.common.projects}
-            <span className="text-accent">.</span>
-          </h1>
-          
-          <div className="h-1 w-24 bg-accent mx-auto mb-8" />
+          <TerminalHero className="mb-12" />
 
           <p className="text-muted-foreground font-mono text-sm md:text-base mb-8 uppercase tracking-widest">
             {projects.length > 0 
@@ -44,15 +40,6 @@ export function HomePageClient({ projects, socialLinks }: HomePageClientProps) {
               : `// ${t.common.noProjects} DETECTED`
             }
           </p>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-foreground/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-light"
-          >
-            {t.common.businessDescription}
-          </motion.p>
 
           <SocialLinks socialLinks={socialLinks} />
         </motion.div>

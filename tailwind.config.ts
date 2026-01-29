@@ -62,6 +62,9 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        "accent-glow": "var(--accent-glow)",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
