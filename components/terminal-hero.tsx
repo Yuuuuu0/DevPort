@@ -82,7 +82,7 @@ interface TerminalLineProps {
   showOutput: boolean
 }
 
-function TerminalLine({ line, index, startDelay, onComplete, showOutput }: TerminalLineProps) {
+function TerminalLine({ line, startDelay, onComplete, showOutput }: TerminalLineProps) {
   const count = useMotionValue(0)
   const rounded = useTransform(count, (latest) => Math.round(latest))
   const displayText = useTransform(rounded, (latest) => line.cmd.slice(0, latest))

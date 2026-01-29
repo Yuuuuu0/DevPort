@@ -86,10 +86,10 @@ export function SocialLinks({ className, socialLinks }: SocialLinksProps) {
             href={link.url}
             target={link.type === 'email' ? undefined : '_blank'}
             rel={link.type === 'email' ? undefined : 'noopener noreferrer'}
-            className="group relative inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background/50 px-4 py-2 text-sm font-medium text-foreground transition-all hover:bg-accent hover:text-accent-foreground hover:border-primary/50 hover:shadow-md"
+            className="group relative inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background/50 px-4 py-2 text-sm font-medium text-foreground transition-all duration-300 hover:bg-accent hover:text-accent-foreground hover:border-accent hover:shadow-accent-glow"
             aria-label={link.label}
           >
-            <span className="transition-transform group-hover:scale-110">
+            <span className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
               {getSocialIcon(link.type)}
             </span>
             <span className="hidden sm:inline-block">{link.label}</span>

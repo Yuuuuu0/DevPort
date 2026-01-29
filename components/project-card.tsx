@@ -28,10 +28,10 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
       <Link href={`/projects/${project.id}`} className="block group relative">
-        <div className="absolute inset-0 bg-accent/5 transform translate-x-2 translate-y-2 border border-border/50 -z-10 transition-transform group-hover:translate-x-3 group-hover:translate-y-3" />
+        <div className="absolute inset-0 bg-accent/5 transform translate-x-2 translate-y-2 border border-border/50 -z-10 transition-transform duration-300 ease-out group-hover:translate-x-3 group-hover:translate-y-3" />
         
-        <Card className="rounded-none border-2 border-border overflow-hidden bg-card transition-all duration-300 group-hover:border-accent">
-          <div className="h-1 w-full bg-border group-hover:bg-accent transition-colors" />
+        <Card className="rounded-none border-2 border-border overflow-hidden bg-card transition-all duration-300 group-hover:border-accent group-hover:shadow-accent-glow">
+          <div className="h-1 w-full bg-border group-hover:bg-accent transition-colors duration-300" />
           
           <div className="relative aspect-video w-full overflow-hidden border-b border-border bg-muted">
             <div className="absolute top-2 left-2 w-2 h-2 border-l-2 border-t-2 border-white/50 z-10" />
@@ -43,7 +43,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
               src={project.coverImage}
               alt={projectName}
               fill
-              className="object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale group-hover:grayscale-0"
+              className="object-cover transition-all duration-500 ease-out group-hover:scale-105 filter grayscale group-hover:grayscale-0"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             

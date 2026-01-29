@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LanguageSwitcher } from '../language-switcher'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 
 export function Header() {
   const pathname = usePathname()
@@ -21,10 +20,10 @@ export function Header() {
             className="flex items-center gap-4"
           >
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="relative w-8 h-8 flex items-center justify-center bg-primary text-primary-foreground font-heading font-bold rounded-sm group-hover:bg-accent transition-colors">
+              <div className="relative w-8 h-8 flex items-center justify-center bg-primary text-primary-foreground font-heading font-bold rounded-sm group-hover:bg-accent group-hover:shadow-accent-glow transition-all duration-300">
                 D
               </div>
-              <span className="text-xl font-heading font-bold uppercase tracking-wider text-foreground group-hover:text-accent transition-colors">
+              <span className="text-xl font-heading font-bold uppercase tracking-wider text-foreground group-hover:text-accent transition-colors duration-300">
                 DevPort
                 <span className="text-accent ml-1">.</span>
               </span>
@@ -37,9 +36,12 @@ export function Header() {
               transition={{ duration: 0.5 }}
               className="flex items-center gap-4"
             >
-              <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-muted/50 rounded-full border border-border/50">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">System Online</span>
+              <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-muted/50 rounded-full border border-border/50 hover:border-accent/30 transition-colors duration-300">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                </span>
+                <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest group-hover:text-accent transition-colors">System Online</span>
               </div>
               <LanguageSwitcher />
             </motion.div>

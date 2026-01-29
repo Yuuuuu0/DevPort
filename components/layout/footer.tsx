@@ -16,7 +16,7 @@ export function Footer() {
           className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-mono text-muted-foreground"
         >
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-accent rounded-sm" />
+            <span className="w-2 h-2 bg-accent rounded-sm shadow-accent-glow" />
             <span>DEVPORT_V1.0</span>
           </div>
           
@@ -27,7 +27,7 @@ export function Footer() {
               href="https://github.com/Yuuuuu0/DevPort"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-accent transition-colors uppercase tracking-wider"
+              className="hover:text-accent transition-colors duration-300 uppercase tracking-wider hover:shadow-accent-glow"
             >
               Mark By Yu
             </Link>

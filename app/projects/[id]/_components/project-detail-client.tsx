@@ -46,7 +46,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-12 border-l-4 border-accent pl-6 py-2"
+            className="mb-12 border-l-4 border-accent pl-6 py-2 shadow-[inset_4px_0_20px_-12px_rgba(0,217,255,0.5)]"
           >
             <div className="text-sm font-mono text-accent mb-2 uppercase tracking-widest">Project Details // {project.id.slice(0, 8)}</div>
             <h1 className="text-5xl md:text-6xl font-heading font-bold bg-clip-text text-foreground uppercase tracking-tight">
@@ -61,7 +61,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="mb-12"
             >
-              <Button asChild size="lg" className="group rounded-none border-2 border-accent bg-accent text-accent-foreground hover:bg-accent/90 hover:border-accent font-bold uppercase tracking-widest" >
+              <Button asChild size="lg" className="group rounded-none border-2 border-accent bg-accent text-accent-foreground hover:bg-accent/90 hover:border-accent hover:shadow-accent-glow font-bold uppercase tracking-widest transition-all duration-300" >
                 <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" suppressHydrationWarning>
                   <ExternalLink className="mr-2 h-4 w-4 group-hover:rotate-45 transition-transform" />
                   {t.common.viewDemo}
