@@ -4,17 +4,23 @@ import { useState, useEffect } from 'react'
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
 import { cn } from '@/lib/utils/cn'
 
-interface TerminalHeroProps {
-  className?: string
+interface TerminalLineData {
+  cmd: string
+  output: string
 }
 
-const lines = [
+interface TerminalHeroProps {
+  className?: string
+  lines?: TerminalLineData[]
+}
+
+const defaultLines: TerminalLineData[] = [
   { cmd: 'whoami', output: 'Developer & Creator' },
   { cmd: 'cat skills.txt', output: 'Full-Stack • UI/UX • Open Source' },
   { cmd: 'ls projects/', output: 'Loading projects...' },
 ]
 
-export function TerminalHero({ className }: TerminalHeroProps) {
+export function TerminalHero({ className, lines = defaultLines }: TerminalHeroProps) {
   const [completedLines, setCompletedLines] = useState<number>(0)
   
   return (
