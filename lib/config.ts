@@ -1,8 +1,3 @@
-/**
- * 网站配置文件
- * 联系方式从 config/.env 文件读取
- */
-
 import { readSocialConfig } from './utils/read-config'
 
 export interface SocialLink {
@@ -12,52 +7,26 @@ export interface SocialLink {
   icon?: string
 }
 
-/**
- * 从配置文件构建联系方式配置
- * 如果某个配置项未设置，则对应的联系方式不会显示
- * 这个函数在服务器端调用，会在运行时读取配置文件
- */
+function normalizeUrl(value: string, type: SocialLink['type']): string {
+  const trimmed = value.trim()
+  if (!trimmed) return ''
+  if (type === 'email') {
+    return trimmed.startsWith('mailto:') ? trimmed : `mailto:${trimmed}`
+  }
+  if (type === 'telegram' && !trimmed.startsWith('http')) {
+    return `https://t.me/${trimmed.replace(/^@/, '')}`
+  }
+  return trimmed
+}
+
 export function buildSocialLinks(): SocialLink[] {
-  const links: SocialLink[] = []
   const config = readSocialConfig()
-
-  // GitHub
-  if (config.github && config.github.trim()) {
-    links.push({
-      type: 'github',
-      label: 'GitHub',
-      url: config.github.trim(),
-    })
-  }
-
-  // Email
-  if (config.email && config.email.trim()) {
-    // 如果 email 不是 mailto: 开头，自动添加
-    const email = config.email.trim().startsWith('mailto:')
-      ? config.email.trim()
-      : `mailto:${config.email.trim()}`
-    links.push({
-      type: 'email',
-      label: 'Email',
-      url: email,
-    })
-  }
-
-  // Telegram
-  if (config.telegram && config.telegram.trim()) {
-    // 如果 telegram 不是完整 URL，自动添加 https://t.me/
-    let telegram = config.telegram.trim()
-    if (!telegram.startsWith('http')) {
-      // 移除 @ 符号（如果有）
-      const username = telegram.replace(/^@/, '')
-      telegram = `https://t.me/${username}`
-    }
-    links.push({
-      type: 'telegram',
-      label: 'Telegram',
-      url: telegram,
-    })
-  }
-
-  return links
+  const entries: { type: SocialLink['type']; label: string; raw?: string }[] = [
+    { type: 'github', label: 'GitHub', raw: config.github },
+    { type: 'email', label: 'Email', raw: config.email },
+    { type: 'telegram', label: 'Telegram', raw: config.telegram },
+  ]
+  return entries
+    .filter(e => e.raw?.trim())
+    .map(e => ({ type: e.type, label: e.label, url: normalizeUrl(e.raw!, e.type) }))
 }

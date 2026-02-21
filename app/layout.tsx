@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Chakra_Petch, Manrope } from "next/font/google"
+import { Inter, Manrope } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "@/components/ui/toaster"
 import { I18nProvider } from "@/lib/i18n/context"
@@ -8,15 +8,14 @@ import { Footer } from "@/components/layout/footer"
 import { DynamicTitle } from "@/components/dynamic-title"
 import { cn } from "@/lib/utils/cn"
 
-const chakra = Chakra_Petch({ 
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-heading",
+  variable: "--font-sans",
 })
 
-const manrope = Manrope({ 
-  subsets: ["latin"], 
-  variable: "--font-sans",
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-heading",
 })
 
 export const metadata: Metadata = {
@@ -39,7 +38,7 @@ export default function RootLayout({
       <body className={cn(
         "min-h-screen bg-background font-sans antialiased",
         manrope.variable,
-        chakra.variable
+        inter.variable
       )}>
         <I18nProvider>
           <DynamicTitle />
